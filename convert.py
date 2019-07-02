@@ -33,20 +33,35 @@ for x in range(width):
             print(x * height + y)
 
 colors = []
+colorToNum = {}
 
+i = 0
 for key in dict:
     colors.append('#%02x%02x%02x' % key)
+    colorToNum[key] = i
+    i += 1
 
 window = Tk()
 
 
 for i in range(len(colors)):
-    lbl = Label(window, text="Color " + i, bg=colors[i])
-    lbl.grid(column=0, row=0)
+    lbl = Label(window, text="Color " + str(i), bg=colors[i])
+    lbl.pack()
 
-window.mainloop()
+window.update()
 
-text = input("Enter numbers of colors separated by commas")
+text = input("Enter colors of interest separated by commas: ")
 nums = text.split(",")
+nums = list(map(int, nums))
 
 
+for x in range(width):
+    for y in range(height):
+        r, g, b = image.getpixel((x, y))
+
+        if colorToNum[(r, g, b)] not in nums:
+           image.putpixel((x, y), (0, 0, 0))
+
+
+file = filename[:-4] + "-interest.jpg"
+image.save(file)
