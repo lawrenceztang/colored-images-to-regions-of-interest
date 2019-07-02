@@ -31,9 +31,6 @@ for x in trange(width):
         else:
             dict[(r, g, b)] = 1
 
-        #if (x * height + y) % 1000000 == 0:
-        #    print(x * height + y)
-
 colors = []
 colorToNum = {}
 
