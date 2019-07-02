@@ -1,5 +1,7 @@
+#!/usr/bin/env python
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
+from tqdm import trange
 
 #/home/lawrence/Documents/Summer_2019
 #image pixel count of 625 million
@@ -20,7 +22,7 @@ from tkinter import *
 
 width, height = image.size
 
-for x in range(width):
+for x in trange(width):
     for y in range(height):
         r, g, b = image.getpixel((x, y))
 
@@ -28,9 +30,6 @@ for x in range(width):
             dict[(r, g, b)] += 1
         else:
             dict[(r, g, b)] = 1
-
-        if (x * height + y) % 1000000 == 0:
-            print(x * height + y)
 
 colors = []
 colorToNum = {}
