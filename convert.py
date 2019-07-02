@@ -7,16 +7,10 @@ from PIL import Image
 import PIL
 
 
-def main(args):
-
-
+def get_color_list(image):
     PIL.Image.MAX_IMAGE_PIXELS = 933120000
 
-    image = Image.open(args.inFile)
-
     dict = {}
-
-
 
     width, height = image.size
 
@@ -30,12 +24,12 @@ def main(args):
                 dict[(r, g, b)] = 1
 
     colors = []
-    colorToNum = {}
+    numToColor = {}
 
     i = 0
     for key in dict:
         colors.append('#%02x%02x%02x' % key)
-        colorToNum[key] = i
+        numToColor[i] = key
         i += 1
 
     window = Tk()
@@ -45,25 +39,40 @@ def main(args):
         lbl.pack()
 
     window.update()
-
     text = input("Enter colors of interest separated by commas: ")
     nums = text.split(",")
     nums = list(map(int, nums))
+    colorsInterest = [numToColor[num] for num in nums]
+    return colorsInterest
 
+def mask_image(image, colorsInterest):
+    width, height = image.size
     interest_count = 0
 
     for x in range(width):
         for y in range(height):
             r, g, b = image.getpixel((x, y))
 
-            if colorToNum[(r, g, b)] not in nums:
+            if (r, g, b) not in colorsInterest:
                 image.putpixel((x, y), (0, 0, 0))
             else:
                 interest_count += 1
 
+    return image, interest_count / (width * height)
+
+
+def main(args):
+
+    PIL.Image.MAX_IMAGE_PIXELS = 933120000
+    image = Image.open(args.inFile)
+    colorsInterest = get_color_list(image)
+    image, percent = mask_image(image, colorsInterest)
+
     import os
+
     file = args.outFile
-    image.save(file + "/" + os.path.basename(os.path.normpath(args.inFile[:]))[:-4] + "-interest-" + str(interest_count / (width * height)) + ".png")
+    image.save(file + "/" + os.path.basename(os.path.normpath(args.inFile[:]))[:-4] + "-interest-" + str(
+       percent) + ".png")
 
 
 if __name__ == "__main__":
