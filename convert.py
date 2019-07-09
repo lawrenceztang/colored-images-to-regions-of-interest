@@ -1,5 +1,9 @@
 #!/usr/bin/env python
-from tkinter import Tk
+
+#input: annotation in the form of an image, with different colors representing different classes
+#user selects colors of interest that should be kept in the image
+#output: new image, colors of interest are kept, colors that aren't of interest turn into RGB of (0, 0, 0), black
+
 from tqdm import trange
 import argparse
 from tkinter import *
